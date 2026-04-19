@@ -1,17 +1,61 @@
 <!doctype html>
 <html>
   <head>
-    <title>LA TV Shows | Home</title>
+    <title>LA TV Shows</title>
     <meta name="description" content="A Catalog of Shows Set in Los Angeles" />
     <link rel="stylesheet" href="style.css" />
-    <script type="text/javascript" src="scripts.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   </head>
-
+  
   <body>
+
     <header class="main-header">
       <h1 class="title">LA TV Shows</h1>
+      <p class="subtitle">A Catalog of Shows Set in Los Angeles</p>
     </header>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('all')">All Shows</button>
+      <button class="tab" onclick="switchTab('favorites')">My Favorites</button>
+    </div>
+
+    <div class="controls">
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search for a show..." onkeyup="searchShows()"/>
+      </div>
+      <div class="genre-filters">
+        <button onclick="filterByGenre('All')">All</button>
+        <button onclick="filterByGenre('Comedy')">Comedy</button>
+        <button onclick="filterByGenre('Drama')">Drama</button>
+        <button onclick="filterByGenre('Crime')">Crime</button>
+      </div>
+      <div class="sort-bar">
+        <select id="sort-select" onchange="sortShows()">
+          <option value="default">Sort By</option>
+          <option value="rating-high">Rating: High to Low</option>
+          <option value="rating-low">Rating: Low to High</option>
+          <option value="title-az">Title: A to Z</option>
+          <option value="title-za">Title: Z to A</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="show-count">
+      <p id="show-count-text">Showing 20 shows</p>
+    </div>
+
+    <div class="add-show-form">
+      <h2>Add a Show</h2>
+      <input type="text" id="new-title" placeholder="Title" />
+      <input type="text" id="new-genre" placeholder="Genre" />
+      <input type="text" id="new-network" placeholder="Network" />
+      <input type="number" id="new-rating" placeholder="Rating (e.g. 8.5)" />
+      <input type="text" id="new-image" placeholder="Image URL" />
+      <button onclick="addShow()">Add Show</button>
+    </div>
+
     <div id="card-container"></div>
+
     <div class="card" style="display: none">
       <div class="card-content">
         <h2>TV Show Title</h2>
@@ -20,12 +64,17 @@
           <li>Bullet Point 1</li>
           <li>Bullet Point 2</li>
           <li>Bullet Point 3</li>
+          <li>Bullet Point 4</li>
         </ul>
       </div>
     </div>
+
     <div class="footer">
       <button onclick="quoteAlert()">Get A Quote!</button>
       <button onclick="removeLastCard()">Remove A Card!</button>
     </div>
+
+    <script type="text/javascript" src="scripts.js"></script>
+
   </body>
 </html>
