@@ -315,6 +315,19 @@ body {
 }
 
 
+.tab-badge {
+  background: #e74c3c;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 7px;
+  font-size: 0.8em;
+  margin-left: 6px;
+  vertical-align: middle;
+  display: inline-block;
+  min-width: 20px;
+  text-align: center;
+}
+
 .tabs {
   display: flex;
   justify-content: center;

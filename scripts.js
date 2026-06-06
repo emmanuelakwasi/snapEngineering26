@@ -268,7 +268,6 @@ let shows = [
   },
 ];
 
-
 // Your final submission should have much more data than this, and
 // you should use more than just an array of strings to store it all.
 
@@ -276,7 +275,6 @@ function displayShows(showList) {
   const cardContainer = document.getElementById("card-container");
   cardContainer.innerHTML = "";
   const templateCard = document.querySelector(".card");
-
 
   document.getElementById("show-count-text").innerHTML = 
     "Showing <span>" + showList.length + "</span> shows";
@@ -307,7 +305,6 @@ function editCardContent(card, show) {
 
   const cardContent = card.querySelector(".card-content");
 
-
   const oldYears = card.querySelector(".card-years");
   const oldDesc = card.querySelector(".card-description");
   if (oldYears) oldYears.remove();
@@ -322,11 +319,9 @@ function editCardContent(card, show) {
   description.textContent = show.description;
   cardContent.appendChild(description);
 
-
   const oldActions = card.querySelector(".card-actions");
   if (oldActions) oldActions.remove();
 
- 
   const cardActions = document.createElement("div");
   cardActions.className = "card-actions";
   const isFavorited = favorites.find(function(s) { return s.id === show.id; });
@@ -371,6 +366,7 @@ function editCardContent(card, show) {
     removeBtn.onclick = function() {
       removeFromWatchlist(show.id);
       displayShows(shows);
+      updateWatchlistBadge();
     };
     watchlistDiv.appendChild(removeBtn);
   } else {
@@ -380,6 +376,7 @@ function editCardContent(card, show) {
     addBtn.onclick = function() {
       addToWatchlist(show.id);
       displayShows(shows);
+      updateWatchlistBadge();
     };
     watchlistDiv.appendChild(addBtn);
   }
@@ -390,7 +387,10 @@ function editCardContent(card, show) {
 
 
 document.addEventListener("DOMContentLoaded", function() {
+  loadFavorites();
+  loadWatchlist();
   displayShows(shows);
+  updateWatchlistBadge();
 });
 
 function quoteAlert() {
@@ -402,7 +402,6 @@ function removeLastCard() {
   shows.pop();
   displayShows(shows);
 }
-
 
 function searchShows() {
   const query = document.getElementById("search-input").value.toLowerCase();
@@ -490,7 +489,6 @@ function addShow() {
   document.getElementById("new-image").value = "";
 }
 
-
 function saveShows() {
   localStorage.setItem("shows", JSON.stringify(shows));
 }
@@ -508,19 +506,39 @@ function loadShows() {
   }
 }
 
-
-document.addEventListener("DOMContentLoaded", function() {
-  loadWatchlist();
-  displayShows(shows);
-});
-
 let favorites = [];
 let watchlist = [];
 let currentTab = "all";
 
+// --- Favorites Local Storage ---
+function saveFavorites() {
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+
+function loadFavorites() {
+  const saved = localStorage.getItem("favorites");
+  if (saved) {
+    favorites = JSON.parse(saved);
+  }
+}
+
+
+function updateWatchlistBadge() {
+  const badge = document.getElementById('watchlist-badge');
+  if (!badge) return;
+  const count = watchlist.length;
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
 // --- Watchlist Local Storage ---
 function saveWatchlist() {
   localStorage.setItem("watchlist", JSON.stringify(watchlist));
+  updateWatchlistBadge();
 }
 
 function loadWatchlist() {
@@ -528,6 +546,7 @@ function loadWatchlist() {
   if (saved) {
     watchlist = JSON.parse(saved);
   }
+  updateWatchlistBadge();
 }
 
 function addToWatchlist(showId) {
@@ -618,6 +637,7 @@ function toggleFavorite(showId) {
   } else {
     favorites.push(show);
   }
+  saveFavorites();
   if (currentTab === "all") {
     displayShows(shows);
   } else {
@@ -636,3 +656,9 @@ function removeShow(showId) {
     displayShows(shows);
   }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+  loadWatchlist();
+  displayShows(shows);
+  updateWatchlistBadge();
+});
