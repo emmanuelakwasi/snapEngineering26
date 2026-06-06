@@ -347,6 +347,44 @@ function editCardContent(card, show) {
   cardActions.appendChild(deleteBtn);
   cardContent.appendChild(cardActions);
 
+  // --- Watchlist UI ---
+  const watchlistDiv = document.createElement("div");
+  watchlistDiv.className = "watchlist-section";
+  if (isInWatchlist(show.id)) {
+    // Progress input
+    const progressLabel = document.createElement("label");
+    progressLabel.textContent = "Progress: ";
+    const progressInput = document.createElement("input");
+    progressInput.type = "number";
+    progressInput.min = 0;
+    progressInput.max = show.seasons;
+    progressInput.value = getProgress(show.id);
+    progressInput.style.width = "50px";
+    progressInput.onchange = function() {
+      updateProgress(show.id, parseInt(progressInput.value, 10));
+    };
+    watchlistDiv.appendChild(progressLabel);
+    watchlistDiv.appendChild(progressInput);
+    // Remove from watchlist button
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "Remove from Watchlist";
+    removeBtn.onclick = function() {
+      removeFromWatchlist(show.id);
+      displayShows(shows);
+    };
+    watchlistDiv.appendChild(removeBtn);
+  } else {
+    // Add to watchlist button
+    const addBtn = document.createElement("button");
+    addBtn.textContent = "Add to Watchlist";
+    addBtn.onclick = function() {
+      addToWatchlist(show.id);
+      displayShows(shows);
+    };
+    watchlistDiv.appendChild(addBtn);
+  }
+  cardContent.appendChild(watchlistDiv);
+
   console.log("new card:", show.title);
 }
 
@@ -472,12 +510,55 @@ function loadShows() {
 
 
 document.addEventListener("DOMContentLoaded", function() {
-  displayShows(shows);
+  loadWatchlist();
   displayShows(shows);
 });
 
-let favorites = []; 
-let currentTab = "all"; 
+let favorites = [];
+let watchlist = [];
+let currentTab = "all";
+
+// --- Watchlist Local Storage ---
+function saveWatchlist() {
+  localStorage.setItem("watchlist", JSON.stringify(watchlist));
+}
+
+function loadWatchlist() {
+  const saved = localStorage.getItem("watchlist");
+  if (saved) {
+    watchlist = JSON.parse(saved);
+  }
+}
+
+function addToWatchlist(showId) {
+  if (!watchlist.find(w => w.showId === showId)) {
+    watchlist.push({ showId, progress: 0 });
+    saveWatchlist();
+  }
+}
+
+function removeFromWatchlist(showId) {
+  watchlist = watchlist.filter(w => w.showId !== showId);
+  saveWatchlist();
+}
+
+function updateProgress(showId, progress) {
+  const entry = watchlist.find(w => w.showId === showId);
+  if (entry) {
+    entry.progress = progress;
+    saveWatchlist();
+  }
+}
+
+function getProgress(showId) {
+  const entry = watchlist.find(w => w.showId === showId);
+  return entry ? entry.progress : 0;
+}
+
+function isInWatchlist(showId) {
+  return !!watchlist.find(w => w.showId === showId);
+}
+
 function switchTab(tab) {
   currentTab = tab;
 

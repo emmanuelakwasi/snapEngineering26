@@ -4,21 +4,21 @@ This repository contains the instructions, requirements, and starter code for St
 
 ---
 
-## 📚 Table of Contents
+## Table of Contents
 
 - [Your Task](#your-task)
 - [Requirements](#requirements---your-catalog-website-should)
 - [Getting Started](#getting-started)
 - [Submitting](#submitting)
-- [❓ Frequently Asked Questions (FAQ)](#-frequently-asked-questions-faq)
+- [Frequently Asked Questions (FAQ)](#-frequently-asked-questions-faq)
 
 ---
 
-## 🎯 Your Task
+## Your Task
 
 ### <p align="center">Create a "catalog" website for something you're passionate about.</p>
 
-> 📝 **Note:**  
+>  **Note:**  
 > If you have not used GitHub or programmed a website with JavaScript before, that's OK! Part of the challenge is figuring out things you're not familiar with.
 
 ---

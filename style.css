@@ -1,5 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Raleway:wght@300;400;600&display=swap');
 
+.watchlist-section {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.watchlist-section input[type="number"] {
+  padding: 2px 4px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 50px;
+}
+.watchlist-section button {
+  background: #f5f5f5;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+.watchlist-section button:hover {
+  background: #e0e0e0;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
