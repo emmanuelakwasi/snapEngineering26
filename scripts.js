@@ -519,6 +519,12 @@ function loadFavorites() {
   const saved = localStorage.getItem("favorites");
   if (saved) {
     favorites = JSON.parse(saved);
+    // Ensure all favorites are also in the watchlist
+    favorites.forEach(function(fav) {
+      if (!isInWatchlist(fav.id)) {
+        addToWatchlist(fav.id);
+      }
+    });
   }
 }
 
@@ -634,8 +640,14 @@ function toggleFavorite(showId) {
 
   if (alreadyFavorited) {
     favorites = favorites.filter(function(s) { return s.id !== showId; });
+    // Also remove from watchlist for consistency
+    removeFromWatchlist(showId);
   } else {
     favorites.push(show);
+    // Also add to watchlist for consistency
+    if (!isInWatchlist(showId)) {
+      addToWatchlist(showId);
+    }
   }
   saveFavorites();
   if (currentTab === "all") {
@@ -645,6 +657,7 @@ function toggleFavorite(showId) {
   }
 }
 
+
 function removeShow(showId) {
   const show = shows.find(function(s) { return s.id === showId; });
   
@@ -652,6 +665,10 @@ function removeShow(showId) {
   
   if (confirmed) {
     shows = shows.filter(function(s) { return s.id !== showId; });
+    // Remove from favorites and watchlist for consistency
+    favorites = favorites.filter(function(s) { return s.id !== showId; });
+    removeFromWatchlist(showId);
+    saveFavorites();
     saveShows();
     displayShows(shows);
   }
