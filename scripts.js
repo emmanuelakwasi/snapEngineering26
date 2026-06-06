@@ -511,6 +511,25 @@ let favorites = [];
 let watchlist = [];
 let currentTab = "all";
 
+// --- Clear All Favorites/Watchlist ---
+function clearAllFavorites() {
+  if (confirm('Are you sure you want to remove all favorites?')) {
+    favorites = [];
+    saveFavorites();
+    updateFavoritesBadge();
+    displayFavorites();
+  }
+}
+
+function clearAllWatchlist() {
+  if (confirm('Are you sure you want to remove all shows from your watchlist?')) {
+    watchlist = [];
+    saveWatchlist();
+    updateWatchlistBadge();
+    displayWatchlist();
+  }
+}
+
 // --- Favorites Local Storage ---
 function saveFavorites() {
   localStorage.setItem("favorites", JSON.stringify(favorites));
