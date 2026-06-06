@@ -562,7 +562,6 @@ function isInWatchlist(showId) {
 function switchTab(tab) {
   currentTab = tab;
 
-
   const tabs = document.querySelectorAll(".tab");
   tabs.forEach(function(btn) {
     btn.classList.remove("active");
@@ -571,10 +570,29 @@ function switchTab(tab) {
   if (tab === "all") {
     tabs[0].classList.add("active");
     displayShows(shows);
-  } else {
+  } else if (tab === "favorites") {
     tabs[1].classList.add("active");
     displayFavorites();
+  } else if (tab === "watchlist") {
+    tabs[2].classList.add("active");
+    displayWatchlist();
   }
+}
+
+function displayWatchlist() {
+  const watchlistShowIds = watchlist.map(w => w.showId);
+  const watchlistShows = shows.filter(show => watchlistShowIds.includes(show.id));
+  if (watchlistShows.length === 0) {
+    const cardContainer = document.getElementById("card-container");
+    cardContainer.innerHTML = `
+      <div class="empty-favorites">
+        <p> No shows in your watchlist yet!</p>
+      </div>
+    `;
+    document.getElementById("show-count-text").innerHTML = "Showing <span>0</span> shows";
+    return;
+  }
+  displayShows(watchlistShows);
 }
 
 function displayFavorites() {
