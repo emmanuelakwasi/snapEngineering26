@@ -391,6 +391,7 @@ document.addEventListener("DOMContentLoaded", function() {
   loadWatchlist();
   displayShows(shows);
   updateWatchlistBadge();
+  updateFavoritesBadge();
 });
 
 function quoteAlert() {
@@ -513,19 +514,26 @@ let currentTab = "all";
 // --- Favorites Local Storage ---
 function saveFavorites() {
   localStorage.setItem("favorites", JSON.stringify(favorites));
+  updateFavoritesBadge();
 }
 
 function loadFavorites() {
   const saved = localStorage.getItem("favorites");
   if (saved) {
     favorites = JSON.parse(saved);
-    // Ensure all favorites are also in the watchlist
+    // Ensure all favorites are also in the watchlist, preserving progress if exists
     favorites.forEach(function(fav) {
+      let progress = 0;
+      const existing = watchlist.find(w => w.showId === fav.id);
+      if (existing) {
+        progress = existing.progress;
+      }
       if (!isInWatchlist(fav.id)) {
-        addToWatchlist(fav.id);
+        addToWatchlist(fav.id, progress);
       }
     });
   }
+  updateFavoritesBadge();
 }
 
 
@@ -533,6 +541,18 @@ function updateWatchlistBadge() {
   const badge = document.getElementById('watchlist-badge');
   if (!badge) return;
   const count = watchlist.length;
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function updateFavoritesBadge() {
+  const badge = document.getElementById('favorites-badge');
+  if (!badge) return;
+  const count = favorites.length;
   if (count > 0) {
     badge.textContent = count;
     badge.style.display = 'inline-block';
@@ -555,9 +575,9 @@ function loadWatchlist() {
   updateWatchlistBadge();
 }
 
-function addToWatchlist(showId) {
+function addToWatchlist(showId, progress = 0) {
   if (!watchlist.find(w => w.showId === showId)) {
-    watchlist.push({ showId, progress: 0 });
+    watchlist.push({ showId, progress });
     saveWatchlist();
   }
 }
@@ -621,6 +641,7 @@ function displayWatchlist() {
 }
 
 function displayFavorites() {
+  updateFavoritesBadge();
   if (favorites.length === 0) {
     const cardContainer = document.getElementById("card-container");
     cardContainer.innerHTML = `
@@ -644,12 +665,18 @@ function toggleFavorite(showId) {
     removeFromWatchlist(showId);
   } else {
     favorites.push(show);
-    // Also add to watchlist for consistency
+    // Also add to watchlist for consistency, preserving progress if exists
+    let progress = 0;
+    const existing = watchlist.find(w => w.showId === showId);
+    if (existing) {
+      progress = existing.progress;
+    }
     if (!isInWatchlist(showId)) {
-      addToWatchlist(showId);
+      addToWatchlist(showId, progress);
     }
   }
   saveFavorites();
+  updateFavoritesBadge();
   if (currentTab === "all") {
     displayShows(shows);
   } else {
@@ -669,6 +696,7 @@ function removeShow(showId) {
     favorites = favorites.filter(function(s) { return s.id !== showId; });
     removeFromWatchlist(showId);
     saveFavorites();
+    updateFavoritesBadge();
     saveShows();
     displayShows(shows);
   }

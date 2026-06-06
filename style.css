@@ -316,17 +316,33 @@ body {
 
 
 .tab-badge {
-  background: #e74c3c;
+  background: linear-gradient(135deg, #ff4444 60%, #c9a84c 100%);
   color: #fff;
   border-radius: 50%;
-  padding: 2px 7px;
-  font-size: 0.8em;
-  margin-left: 6px;
+  padding: 3px 9px;
+  font-size: 1em;
+  margin-left: 8px;
   vertical-align: middle;
   display: inline-block;
-  min-width: 20px;
+  min-width: 22px;
   text-align: center;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(201,168,76,0.18), 0 1px 4px rgba(0,0,0,0.25);
+  border: 2px solid #fff2;
+  letter-spacing: 0.03em;
+  transition: background 0.2s, box-shadow 0.2s;
 }
+
+.tab-badge:not(:empty) {
+  animation: badge-pop 0.25s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes badge-pop {
+  0% { transform: scale(0.7); }
+  70% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
 
 .tabs {
   display: flex;
